@@ -101,7 +101,6 @@ int checkCollisions(char* passwordDictionaryFilePath, char* hashedPasswordsFileP
         }
         completedPasswords++;
         printf("%.2f%% Completed\r", (completedPasswords/totalPasswords) * 100);
-        fflush(stdout);
     }
     printf("There is no password in the dictionary that matches with the hashed values");
 

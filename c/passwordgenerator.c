@@ -95,7 +95,6 @@ void generateCombinations(FILE *outputFile, int noOfKeysPressed, struct Characte
         generatePermutations(clone, outputFile);
         noOfCombinationsPermutatted++;
         printf("%.2f%% Completed\r", (noOfCombinationsPermutatted/totalNoOfCombinations) * 100);
-        fflush(stdout);
         return;
     }
 
