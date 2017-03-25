@@ -120,7 +120,7 @@ void generatePasswordFile(char* passwordOutputFilePath) {
     int noOfKeysPressed = 8;
     struct CharactersOnKey charactersOnKey[noOfKeysPressed];
 
-    char characters0[] = {'q', 'Q', '@', '\0'};
+    char characters0[] = {'q', 'Q', '\0'};
     charactersOnKey[0].character = characters0;
 
     char characters1[] = {'w', 'W', '\0'};
@@ -129,16 +129,16 @@ void generatePasswordFile(char* passwordOutputFilePath) {
     char characters2[] = {'5', '%', '\0'};
     charactersOnKey[2].character = characters2;
 
-    char characters3[] = {'(', '8', '[', '\0'};
+    char characters3[] = {'(', '8', '\0'};
     charactersOnKey[3].character = characters3;
 
-    char characters4[] = {'=', '0', '}', '\0'};
+    char characters4[] = {'=', '0', '\0'};
     charactersOnKey[4].character = characters4;
 
     char characters5[] = {'i', 'I', '\0'};
     charactersOnKey[5].character = characters5;
 
-    char characters6[] = {'*', '+', '~', '\0'};
+    char characters6[] = {'*', '+', '\0'};
     charactersOnKey[6].character = characters6;
 
     char characters7[] = {'n', 'N', '\0'};

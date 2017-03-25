@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 11)
 
 set(SOURCE_FILES
         bfsha1match
-        bfsha1match.c
+        sha1collisionchecker.c
         dictionary.txt
         hashedpassword.txt
         ReadMe.txt SHA1Crack.c passwordgenerator.c passwordgenerator.h bfsha1match.h)

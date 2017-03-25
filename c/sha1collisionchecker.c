@@ -46,30 +46,47 @@ int checkCollisions(char* passwordDictionaryFilePath, char* hashedPasswordsFileP
     double completedPasswords = 0;
 
     //These variables are used to traverse the dictionary file
-    char fdline[20], dline[20];
+    char password[20], trimmedPassword[20];
 
     //These variables are used to traverse the SHA1 hashed password file
-    int sha1outputlength = SHA_DIGEST_LENGTH * 2 + 1;
-    char fhline[sha1outputlength], hline[sha1outputlength];
+    int sha1outputlength = SHA_DIGEST_LENGTH * 2 + 1, noOfHashes;
+
+    char originalHash[sha1outputlength], trimmedOriginalHash[sha1outputlength];
+
+    if (fgets(originalHash, sha1outputlength, hf) != NULL) {
+        //Set trimmedOriginalHash to a empty string
+        memset(trimmedOriginalHash, 0, sha1outputlength);
+        //Trim the \n charater of the password
+        if (originalHash[strlen(originalHash) - 1] == '\n') {
+            strncpy(trimmedOriginalHash, originalHash, strlen(originalHash) - 1);
+        } else {
+            strncpy(trimmedOriginalHash, originalHash, strlen(originalHash));
+        }
+    } else {
+        printf("The Hashed password file does not contain any hashes");
+        exit(1);
+    }
+    fclose(hf);
+
     printf("Checking collisions:\n");
 
-    while (fgets(fdline, 20, df) != NULL) {
-        //printf("%s",fdline);
+    while (fgets(password, 20, df) != NULL) {
+        //printf("%s",password);
 
-        //Set dline to a empty string
-        memset(dline, 0, 20);
+        //Set trimmedPassword to a empty string
+        memset(trimmedPassword, 0, 20);
 
-        //Trim the \n charater of the fdline
-        if (fdline[strlen(fdline) - 1] == '\n') {
-            strncpy(dline, fdline, strlen(fdline) - 1);
+        //Trim the \n charater of the password
+        if (password[strlen(password) - 1] == '\n') {
+            strncpy(trimmedPassword, password, strlen(password) - 1);
         } else {
-            strncpy(dline, fdline, strlen(fdline));
+            strncpy(trimmedPassword, password, strlen(password));
         }
 
         unsigned char digest[SHA_DIGEST_LENGTH];
         //char string[] = "Password1 ";
         //SHA1((unsigned char*)&string, strlen(string), (unsigned char*)&digest);
-        SHA1((unsigned char *) &dline, strlen(dline), (unsigned char *) &digest);
+        SHA1((unsigned char *) &trimmedPassword, strlen(trimmedPassword), (unsigned char *) &digest);
 
         //printf("Digest: %s\n", digest);
 
@@ -78,27 +95,15 @@ int checkCollisions(char* passwordDictionaryFilePath, char* hashedPasswordsFileP
         for (i = 0; i < SHA_DIGEST_LENGTH; i++)
             sprintf(&mdString[i * 2], "%02x", (unsigned int) digest[i]);
 
-//        printf("SHA1 of \"%s\" is: %s\n", dline, mdString);
+//        printf("SHA1 of \"%s\" is: %s\n", trimmedPassword, mdString);
 
         //Done with hashing password from dictionary, now compare the hashed value with the values in hased password file
-        rewind(hf); //Rewind the hashed file when checking the next password in the dictionary
-        while (fgets(fhline, sha1outputlength, hf) != NULL) {
-            //Set hline to a empty string
-            memset(hline, 0, sha1outputlength);
-            //Trim the \n charater of the fdline
-            if (fhline[strlen(fhline) - 1] == '\n') {
-                strncpy(hline, fhline, strlen(fhline) - 1);
-            } else {
-                strncpy(hline, fhline, strlen(fhline));
-            }
-
-            if (compareStrings(mdString, hline) == 1) {
-                printf("Password found: %s\n", dline);
-                fclose(df);
-                fclose(hf);
-                return 1;
-            }
+        if (compareStrings(mdString, trimmedOriginalHash) == 1) {
+            printf("Password found: %s\n", trimmedPassword);
+            fclose(df);
+            return 1;
         }
+
         completedPasswords++;
         printf("%.2f%% Completed\r", (completedPasswords/totalPasswords) * 100);
     }
